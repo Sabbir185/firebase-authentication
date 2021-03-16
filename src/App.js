@@ -1,10 +1,15 @@
+import React, { useState } from 'react';
 import './App.css';
 import firebase from "firebase/app";
 import "firebase/auth";
 import firebaseConfig from './firebase.config';
-import { useState } from 'react';
 
-firebase.initializeApp(firebaseConfig);
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
+}
+else{
+  firebase.app();
+}
 
 
 function App() {
@@ -54,6 +59,8 @@ function App() {
     alert('User sign out successful !');
   }
 
+
+  // user input
   const inputHandle = () => {
 
   }
@@ -66,7 +73,7 @@ function App() {
     <div className='App'>
       {
         user.isUserSignIn ? <button className='btn btn-warning  mb-5' onClick={handleSignOut}>Sign Out</button> :
-        <button className='btn btn-primary' onClick={handleSignIn}>Sign in</button>
+        <button className='btn btn-primary' onClick={handleSignIn}>Sign in with gmail</button>
       }
       {
         user.isUserSignIn && <div>
