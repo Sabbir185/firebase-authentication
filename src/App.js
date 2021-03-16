@@ -72,8 +72,9 @@ function App() {
       console.log(isEmailValid);
     }
     if(event.target.name === 'password'){
-      const isValidPassword = /\d{1}/.test(event.target.value)
-        console.log(isValidPassword);
+      const isPassword = event.target.value.length > 5;
+      const isPasswordNumber = /\d{1}/.test(event.target.value)
+        console.log(isPasswordNumber && isPassword);
     }
   }
 
