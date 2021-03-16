@@ -78,9 +78,9 @@ function App() {
 
       <h1 className='mt-4'>User Input Authentication</h1>
       <form onClick={inputHandle}>
-        <input type="text" name='email' onChange={changeHandler} placeholder='Enter Email' required className='form-control text-center mt-3'/>
+        <input type="text" name='email' onBlur={changeHandler} placeholder='Enter Email' required className='form-control text-center mt-3'/>
         <br/>
-        <input type="password" name='password' onChange={changeHandler} placeholder='password' required className='form-control text-center' />
+        <input type="password" name='password' onBlur={changeHandler} placeholder='password' required className='form-control text-center' />
         <br/>
         <input type="submit" value="Submit" className='btn btn-success'/>
       </form>
