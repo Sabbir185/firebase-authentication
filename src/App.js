@@ -67,6 +67,14 @@ function App() {
 
   const changeHandler = (event) => {
     console.log(event.target.name, event.target.value)
+    if(event.target.name === 'email'){
+      const isEmailValid = /\S+@\S+\.\S+/.test(event.target.value);
+      console.log(isEmailValid);
+    }
+    if(event.target.name === 'password'){
+      const isValidPassword = /\d{1}/.test(event.target.value)
+        console.log(isValidPassword);
+    }
   }
 
   return (
