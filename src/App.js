@@ -20,7 +20,9 @@ function App() {
     name:'',
     email:'',
     password:'',
-    photo:''
+    photo:'',
+    error:'',
+    success: false
   })
 
   const handleSignIn = () =>{
@@ -49,7 +51,8 @@ function App() {
         isUserSignIn: false,
         name:'',
         email:'',
-        photo:''
+        photo:'',
+        
       }
       setUser(UserSignOut);
     })
@@ -62,22 +65,39 @@ function App() {
 
 
   // user input
-  const inputHandle = () => {
-
+  // handle submit
+  const handleSubmit = (event) => {
+    if(user.email && user.password){
+      firebase.auth().createUserWithEmailAndPassword(user.email, user.password)
+      .then(res => {
+        console.log(res)
+          const newUserInfo = {...user};
+          newUserInfo.error = '';
+          newUserInfo.success = true;
+          setUser(newUserInfo);
+      })
+        .catch((error) => {
+          const newUserInfo = {...user};
+          newUserInfo.error = error.message;
+          newUserInfo.success = false;
+          setUser(newUserInfo);
+        });
+    }
+    event.preventDefault();
   }
 
   const handleBlur = (event) => {
-    let isFormValid = true;
+    let isFieldValid = true;
     if(event.target.name === 'email'){
-      isFormValid = /\S+@\S+\.\S+/.test(event.target.value);
+      isFieldValid = /\S+@\S+\.\S+/.test(event.target.value);
     }
     if(event.target.name === 'password'){
       const isPassword = event.target.value.length > 5;
       const isPasswordNumber = /\d{1}/.test(event.target.value)
-      isFormValid = isPasswordNumber && isPassword;
+      isFieldValid = isPasswordNumber && isPassword;
     }
 
-    if(isFormValid){
+    if(isFieldValid){
       const newUserID = {...user};
       newUserID[event.target.name] = event.target.value;
       setUser(newUserID);
@@ -99,10 +119,12 @@ function App() {
       }
 
       <h1 className='mt-4'>User Input Authentication</h1>
+
       <p>Name : {user.name}</p>
       <p>Email : {user.email}</p>
       <p>Password : {user.password}</p>
-      <form onClick={inputHandle}>
+
+      <form onClick={handleSubmit}>
         <input type="text" name='name' onBlur={handleBlur} placeholder='Enter Name' required className='form-control text-center mt-3'/>
         <br/>
         <input type="text" name='email' onBlur={handleBlur} placeholder='Enter Email' required className='form-control text-center mt-2'/>
@@ -111,6 +133,10 @@ function App() {
         <br/>
         <input type="submit" value="Submit" className='btn btn-success'/>
       </form>
+      <p style={{color:'red'}}>{user.error}</p>
+      {
+        user.success && <p style={{color:'green',fontSize:'25px'}}>You have successfully registered!</p>
+      }
 
     </div>
   );
