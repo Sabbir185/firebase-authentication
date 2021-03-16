@@ -15,6 +15,8 @@ else{
 function App() {
   const provider = new firebase.auth.GoogleAuthProvider();
 
+  const [newUser, setNewUser] = useState(false);
+
   const [user, setUser] = useState({
     isUserSignIn: false,
     name:'',
@@ -67,10 +69,10 @@ function App() {
   // user input
   // handle submit
   const handleSubmit = (event) => {
-    if(user.email && user.password){
+    // user sign up
+    if(newUser && user.email && user.password){
       firebase.auth().createUserWithEmailAndPassword(user.email, user.password)
       .then(res => {
-        console.log(res)
           const newUserInfo = {...user};
           newUserInfo.error = '';
           newUserInfo.success = true;
@@ -82,6 +84,23 @@ function App() {
           newUserInfo.success = false;
           setUser(newUserInfo);
         });
+    }
+
+    // user sign in
+    if(!newUser && user.email && user.password){
+      firebase.auth().signInWithEmailAndPassword(user.email, user.password)
+      .then( res => {
+        const newUserInfo = {...user};
+          newUserInfo.error = '';
+          newUserInfo.success = true;
+          setUser(newUserInfo);
+      })
+      .catch((error) => {
+          const newUserInfo = {...user};
+          newUserInfo.error = error.message;
+          newUserInfo.success = false;
+          setUser(newUserInfo);
+      });
     }
     event.preventDefault();
   }
@@ -120,12 +139,11 @@ function App() {
 
       <h1 className='mt-4'>User Input Authentication</h1>
 
-      <p>Name : {user.name}</p>
-      <p>Email : {user.email}</p>
-      <p>Password : {user.password}</p>
+      <input type="checkbox" onChange={() => setNewUser(!newUser)} name="newUser" id=""/>
+      <label htmlFor="newUser"> New user sign up</label>
 
       <form onClick={handleSubmit}>
-        <input type="text" name='name' onBlur={handleBlur} placeholder='Enter Name' required className='form-control text-center mt-3'/>
+        {newUser && <input type="text" name='name' onBlur={handleBlur} placeholder='Enter Name' required className='form-control text-center mt-3'/>}
         <br/>
         <input type="text" name='email' onBlur={handleBlur} placeholder='Enter Email' required className='form-control text-center mt-2'/>
         <br/>
@@ -135,7 +153,7 @@ function App() {
       </form>
       <p style={{color:'red'}}>{user.error}</p>
       {
-        user.success && <p style={{color:'green',fontSize:'25px'}}>You have successfully registered!</p>
+        user.success && <p style={{color:'green',fontSize:'25px'}}>User {newUser ? 'created':'logged in'} successfully!</p>
       }
 
     </div>
