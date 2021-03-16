@@ -54,6 +54,14 @@ function App() {
     alert('User sign out successful !');
   }
 
+  const inputHandle = () => {
+
+  }
+
+  const changeHandler = (event) => {
+    console.log(event.target.name, event.target.value)
+  }
+
   return (
     <div className='App'>
       {
@@ -67,6 +75,16 @@ function App() {
           <img src={user.photo} alt=""/>
         </div>
       }
+
+      <h1 className='mt-4'>User Input Authentication</h1>
+      <form onClick={inputHandle}>
+        <input type="text" name='email' onChange={changeHandler} placeholder='Enter Email' required className='form-control text-center mt-3'/>
+        <br/>
+        <input type="password" name='password' onChange={changeHandler} placeholder='password' required className='form-control text-center' />
+        <br/>
+        <input type="submit" value="Submit" className='btn btn-success'/>
+      </form>
+
     </div>
   );
 }
