@@ -19,6 +19,7 @@ function App() {
     isUserSignIn: false,
     name:'',
     email:'',
+    password:'',
     photo:''
   })
 
@@ -65,16 +66,21 @@ function App() {
 
   }
 
-  const changeHandler = (event) => {
-    console.log(event.target.name, event.target.value)
+  const handleBlur = (event) => {
+    let isFormValid = true;
     if(event.target.name === 'email'){
-      const isEmailValid = /\S+@\S+\.\S+/.test(event.target.value);
-      console.log(isEmailValid);
+      isFormValid = /\S+@\S+\.\S+/.test(event.target.value);
     }
     if(event.target.name === 'password'){
       const isPassword = event.target.value.length > 5;
       const isPasswordNumber = /\d{1}/.test(event.target.value)
-        console.log(isPasswordNumber && isPassword);
+      isFormValid = isPasswordNumber && isPassword;
+    }
+
+    if(isFormValid){
+      const newUserID = {...user};
+      newUserID[event.target.name] = event.target.value;
+      setUser(newUserID);
     }
   }
 
@@ -93,10 +99,15 @@ function App() {
       }
 
       <h1 className='mt-4'>User Input Authentication</h1>
+      <p>Name : {user.name}</p>
+      <p>Email : {user.email}</p>
+      <p>Password : {user.password}</p>
       <form onClick={inputHandle}>
-        <input type="text" name='email' onBlur={changeHandler} placeholder='Enter Email' required className='form-control text-center mt-3'/>
+        <input type="text" name='name' onBlur={handleBlur} placeholder='Enter Name' required className='form-control text-center mt-3'/>
         <br/>
-        <input type="password" name='password' onBlur={changeHandler} placeholder='password' required className='form-control text-center' />
+        <input type="text" name='email' onBlur={handleBlur} placeholder='Enter Email' required className='form-control text-center mt-2'/>
+        <br/>
+        <input type="password" name='password' onBlur={handleBlur} placeholder='password' required className='form-control text-center' />
         <br/>
         <input type="submit" value="Submit" className='btn btn-success'/>
       </form>
