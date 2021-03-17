@@ -14,6 +14,7 @@ else{
 
 function App() {
   const provider = new firebase.auth.GoogleAuthProvider();
+  const fbProvider = new firebase.auth.FacebookAuthProvider();
 
   const [newUser, setNewUser] = useState(false);
 
@@ -107,6 +108,28 @@ function App() {
     event.preventDefault();
   }
 
+
+  // handle fb sign in
+  const handleFbSignIn = () =>{
+    firebase
+    .auth()
+    .signInWithPopup(fbProvider)
+    .then((result) => {
+      /** @type {firebase.auth.OAuthCredential} */
+      var credential = result.credential;
+      var user = result.user;
+      var accessToken = credential.accessToken;
+      console.log(user);
+    })
+    .catch((error) => {
+      var errorCode = error.code;
+      var errorMessage = error.message;
+      var email = error.email;
+      var credential = error.credential;
+    });
+  }
+
+
   const updateUserName = (name) =>{
     var user = firebase.auth().currentUser;
 
@@ -143,6 +166,7 @@ function App() {
         user.isUserSignIn ? <button className='btn btn-warning  mb-5' onClick={handleSignOut}>Sign Out</button> :
         <button className='btn btn-primary' onClick={handleSignIn}>Sign in with gmail</button>
       }
+      <button className='btn btn-success' onClick={handleFbSignIn}>FB Sign In</button>
       {
         user.isUserSignIn && <div>
           <p>Welcome, {user.name}</p>
